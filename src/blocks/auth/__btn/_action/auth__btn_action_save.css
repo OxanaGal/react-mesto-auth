@@ -1,0 +1,13 @@
+.auth__btn_action_save{
+  border: 0;
+  border-radius: 2px;
+  color: black;
+
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 18px;
+  line-height: 21.78px;
+  height: 50px;
+  padding-bottom: 5px;
+  transition: opacity .4s;
+  width: 100%;
+}

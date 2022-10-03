@@ -16,7 +16,6 @@ import ProtectedRoute from './ProtectedRoute';
 import InfoToolTip from './InfoToolTip';
 import * as auth from '../utils/auth';
 
-
 function App() {
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -40,6 +39,8 @@ function App() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
+    console.log(isLoggedIn)
+    if(isLoggedIn){
     Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then(([user, cards]) => {
         setCurrentUser(user);
@@ -48,7 +49,8 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-  }, [])
+    }
+  }, [isLoggedIn])
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -118,8 +120,6 @@ function App() {
       }
     }
   }, [isOpen]);
-
-
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -218,6 +218,8 @@ function App() {
         } else if (err.status === 401) {
           console.log("401 - пользователь с email не найден");
         }
+        setInfoToolTipPopupOpen(true);
+        setIsSuccess(false);
       });
   }
 
@@ -227,8 +229,6 @@ function App() {
     //navigate("/sign-in")
     history.push("/sign-in")
   }
-
-
 
   return (
     <div className="page">

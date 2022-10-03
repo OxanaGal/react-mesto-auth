@@ -28,7 +28,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
 
-  const [isLoadingText, setIsLoadingText] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
@@ -41,6 +41,7 @@ function App() {
   useEffect(() => {
     console.log(isLoggedIn)
     if(isLoggedIn){
+      setIsLoading(true);
     Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then(([user, cards]) => {
         setCurrentUser(user);
@@ -48,6 +49,9 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       })
     }
   }, [isLoggedIn])
@@ -105,7 +109,7 @@ function App() {
     setInfoToolTipPopupOpen(false)
   }
 
-  const isOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || selectedCard.isOpen || isComfirmationPopupOpen
+  const isOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || selectedCard.isOpen || isComfirmationPopupOpen || isInfoToolTipPopupOpen
 
   useEffect(() => {
     function handleEscClose(event) {
@@ -145,7 +149,7 @@ function App() {
   }
 
   function handleUpdateUser(data) {
-    setIsLoadingText(true);
+    setIsLoading(true);
     api.patchUserProfile(data)
       .then((res) => {
         setCurrentUser(res);
@@ -153,12 +157,12 @@ function App() {
       .then(() => closeAllPopups())
       .catch((err) => console.log(err))
       .finally(() => {
-        setIsLoadingText(false);
+        setIsLoading(false);
       });
   }
 
   function handleUpdateAvatar(avatar) {
-    setIsLoadingText(true);
+    setIsLoading(true);
     api.patchUserAvatar(avatar)
       .then((res) => {
         console.log(res)
@@ -167,12 +171,12 @@ function App() {
       .then(() => closeAllPopups())
       .catch((err) => console.log(err))
       .finally(() => {
-        setIsLoadingText(false);
+        setIsLoading(false);
       });
   }
 
   function handleAddPlaceSubmit(card) {
-    setIsLoadingText(true);
+    setIsLoading(true);
     api.postNewCard(card)
       .then((res) => {
         setCards([res, ...cards]);
@@ -180,7 +184,7 @@ function App() {
       .then(() => closeAllPopups())
       .catch((err) => console.log(err))
       .finally(() => {
-        setIsLoadingText(false);
+        setIsLoading(false);
       });
   }
 
@@ -249,6 +253,7 @@ function App() {
             onCardDeleteClick={handleDeleteCardClick}
             cards={cards}
             component={Main}
+            isLoading={isLoading}
           />
           <Route path="/sign-in">
             <Login onLogin={handleLoginSubmit} />
@@ -292,10 +297,10 @@ function App() {
 
         {isLoggedIn && <Footer />}
 
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={isLoadingText} />
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isLoading={isLoadingText} />
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isLoading={isLoadingText} />
-        <ConfirmationPopup isOpen={isComfirmationPopupOpen} onClose={closeAllPopups} onCardDelete={handleDeleteCard} isLoading={isLoadingText} />
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={isLoading} />
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isLoading={isLoading} />
+        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isLoading={isLoading} />
+        <ConfirmationPopup isOpen={isComfirmationPopupOpen} onClose={closeAllPopups} onCardDelete={handleDeleteCard} isLoading={isLoading} />
         <InfoToolTip isOpen={isInfoToolTipPopupOpen} onClose={closeAllPopups} isSuccess={isSuccess} />
 
         <ImagePopup name="image-preview" card={selectedCard} isOpen={isImagePopupOpen} onClose={closeAllPopups} />

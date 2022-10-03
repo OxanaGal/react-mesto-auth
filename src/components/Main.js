@@ -1,13 +1,17 @@
 import { useContext } from 'react';
 import Card from './Card';
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
+import BarLoader from "react-spinners/BarLoader";
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, cards, onCardLike, onCardDeleteClick }) {
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, cards, onCardLike, onCardDeleteClick, isLoading }) {
 
   const currentUser = useContext(CurrentUserContext);
 
   return (
     <main className="content">
+
+      <BarLoader color="#fff" loading={isLoading} className="barloader"/>
+      <div className={`${isLoading ? 'hidden' : ''}`}>
       <section className="profile">
         <div className="profile__columns">
           <div className="profile__avatar" onClick={onEditAvatar}>
@@ -37,6 +41,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, cards, onC
           )}
         </ul>
       </section>
+      </div>
     </main>
 
   )

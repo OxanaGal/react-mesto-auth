@@ -8,6 +8,7 @@
 @import url(./blocks/page/page.css);
 @import url(./blocks/shaded/shaded.css);
 @import url(./blocks/hidden/hidden.css);
+@import url(./blocks/barloader/barloader.css);
 
 @import url(./blocks/popup/popup.css);
 @import url(./blocks/popup/__container/popup__container.css);
